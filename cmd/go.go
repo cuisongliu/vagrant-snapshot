@@ -15,23 +15,28 @@
 package cmd
 
 import (
-	"fmt"
-
+	"github.com/cuisongliu/vagrant-snapshot/app"
 	"github.com/spf13/cobra"
+	"github.com/wonderivan/logger"
 )
 
 // goCmd represents the go command
 var goCmd = &cobra.Command{
 	Use:   "go",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Go to specified snapshot",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("go called")
+		if len(args) != 1 {
+			logger.Error("快照名称不能为空")
+		} else {
+			machines := app.CmdVagrantMachine()
+			for _, v := range machines {
+				if v == "" {
+					continue
+				}
+				print("执行机器名称：", v, "\n")
+				app.Cmd("vagrant", "snapshot", "go", "-r", v, args[0])
+			}
+		}
 	},
 }
 

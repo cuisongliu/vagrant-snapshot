@@ -15,23 +15,23 @@
 package cmd
 
 import (
-	"fmt"
-
+	"github.com/cuisongliu/vagrant-snapshot/app"
 	"github.com/spf13/cobra"
 )
 
 // backCmd represents the back command
 var backCmd = &cobra.Command{
 	Use:   "back",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Back to current snapshot",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("back called")
+		machines := app.CmdVagrantMachine()
+		for _, v := range machines {
+			if v == "" {
+				continue
+			}
+			print("执行机器名称：", v, "\n")
+			app.Cmd("vagrant", "snapshot", "back", v)
+		}
 	},
 }
 
@@ -43,7 +43,6 @@ func init() {
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
 	// backCmd.PersistentFlags().String("foo", "", "A help for foo")
-
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// backCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")

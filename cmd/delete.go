@@ -15,23 +15,28 @@
 package cmd
 
 import (
-	"fmt"
-
+	"github.com/cuisongliu/vagrant-snapshot/app"
 	"github.com/spf13/cobra"
+	"github.com/wonderivan/logger"
 )
 
 // deleteCmd represents the delete command
 var deleteCmd = &cobra.Command{
 	Use:   "delete",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Delete snapshot (warning: this is a very slow operation)",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("delete called")
+		if len(args) != 1 {
+			logger.Error("快照名称不能为空")
+		} else {
+			machines := app.CmdVagrantMachine()
+			for _, v := range machines {
+				if v == "" {
+					continue
+				}
+				print("执行机器名称：", v, "\n")
+				app.Cmd("vagrant", "snapshot", "delete", v, args[0])
+			}
+		}
 	},
 }
 

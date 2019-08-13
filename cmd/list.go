@@ -15,23 +15,23 @@
 package cmd
 
 import (
-	"fmt"
-
+	"github.com/cuisongliu/vagrant-snapshot/app"
 	"github.com/spf13/cobra"
 )
 
 // listCmd represents the list command
 var listCmd = &cobra.Command{
 	Use:   "list",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "List snapshots",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("list called")
+		machines := app.CmdVagrantMachine()
+		for _, v := range machines {
+			if v == "" {
+				continue
+			}
+			print("执行机器名称：", v, "\n")
+			app.Cmd("vagrant", "snapshot", "list", v)
+		}
 	},
 }
 
